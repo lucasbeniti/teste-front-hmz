@@ -1,8 +1,30 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Loader2Icon } from "lucide-react";
+import { useState } from "react";
 import { Button } from "../components/ui/button";
 import { Card, CardContent } from "../components/ui/card";
 import { Input } from "../components/ui/input";
+import { login } from "../hooks/useLogin";
 
 const LoginPage = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    setIsLoading(true);
+    setError("");
+
+    try {
+      await login({ email, password });
+    } catch (err: any) {
+      setError(err.message)
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <div className="min-h-screen grid grid-cols-2">
       <div className="flex flex-col justify-center items-center bg-white p-8 w-full h-full">
@@ -29,16 +51,26 @@ const LoginPage = () => {
                   className="bg-white text-sm px-5"
                   placeholder="EMAIL"
                   type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
 
                 <Input 
                   className="bg-white text-sm px-5"
                   placeholder="SENHA"
                   type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
 
-                <Button className="bg-white text-gray-400 hover:bg-white hover:text-gray-500 w-fit self-center px-10 uppercase">
-                  Logar
+                { error && <p className="text-red-500 text-sm">{error}</p> }
+
+                <Button 
+                  className="bg-white text-gray-400 hover:bg-white hover:text-gray-500 w-fit self-center px-10 uppercase"
+                  onClick={handleLogin}
+                  disabled={isLoading}
+                >
+                  { isLoading ? <Loader2Icon /> : "Logar" }
                 </Button>
               </div>
 
