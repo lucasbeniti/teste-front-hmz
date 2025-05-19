@@ -19,7 +19,7 @@ const LoginPage = () => {
     try {
       await login({ email, password });
     } catch (err: any) {
-      setError(err.message)
+      setError(err.response.data.message)
     } finally {
       setIsLoading(false);
     }
